@@ -17,18 +17,18 @@ source "${SCRIPT_DIR}/load_visual_lab_config.sh"
 set +a
 
 if [ "$#" -lt 1 ]; then
-  echo "Usage: source ${SCRIPT_DIR}/run_lab.sh <lab1|lab2|lab3|lab4|lab5|lab6|lab7>" >&2
+  echo "Usage: source ${SCRIPT_DIR}/run_lab.sh <lab1|lab2|lab3|lab4|lab5|lab6|lab7|lab8>" >&2
   echo "       or: bash ${SCRIPT_DIR}/run_lab.sh lab1" >&2
   exit 1
 fi
 
 LAB_NAME="${1,,}"
 case "$LAB_NAME" in
-  lab1|lab2|lab3|lab4|lab5|lab6|lab7)
+  lab1|lab2|lab3|lab4|lab5|lab6|lab7|lab8)
     ;;
   *)
     echo "Unknown lab: $1" >&2
-    echo "Available: lab1 lab2 lab3 lab4 lab5 lab6 lab7" >&2
+    echo "Available: lab1 lab2 lab3 lab4 lab5 lab6 lab7 lab8" >&2
     exit 1
     ;;
  esac
