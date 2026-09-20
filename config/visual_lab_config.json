@@ -6,5 +6,10 @@
   "frame_height": 480,
   "frame_image": "",
   "yunet_onnx": "",
-  "yunet_engine": ""
+  "yunet_engine": "",
+  "opencv_root": "",
+  "opencv_include_dir": "",
+  "opencv_lib_dir": "",
+  "tensorrt_include_dir": "/usr/include/aarch64-linux-gnu",
+  "tensorrt_lib_dir": "/usr/lib/aarch64-linux-gnu"
 }

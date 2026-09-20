@@ -10,9 +10,9 @@ if [ ! -f "$CONFIG_FILE" ]; then
   return 1 2>/dev/null || exit 1
 fi
 
-python3 - "$CONFIG_FILE" <<'PY'
+eval "$(python3 - "$CONFIG_FILE" <<'PY'
 import json
-import os
+import shlex
 import sys
 
 config_path = sys.argv[1]
@@ -30,6 +30,11 @@ exports = {
     'VISUAL_LAB_FRAME_IMAGE': 'frame_image',
     'VISUAL_LAB_YUNET_ONNX': 'yunet_onnx',
     'VISUAL_LAB_YUNET_ENGINE': 'yunet_engine',
+    'OPENCV_ROOT': 'opencv_root',
+    'OPENCV_INCLUDE_DIR': 'opencv_include_dir',
+    'OPENCV_LIB_DIR': 'opencv_lib_dir',
+    'TENSORRT_INCLUDE_DIR': 'tensorrt_include_dir',
+    'TENSORRT_LIB_DIR': 'tensorrt_lib_dir',
 }
 
 for env_name, config_key in exports.items():
@@ -39,12 +44,13 @@ for env_name, config_key in exports.items():
     if isinstance(value, bool):
         value = '1' if value else '0'
     if value == '':
-        os.environ.pop(env_name, None)
+        print(f'unset {env_name}')
     else:
-        os.environ[env_name] = str(value)
+        print(f'export {env_name}={shlex.quote(str(value))}')
 
-os.environ['VISUAL_LAB_CONFIG'] = config_path
+print(f'export VISUAL_LAB_CONFIG={shlex.quote(config_path)}')
 PY
+)"
 
 set +a
 

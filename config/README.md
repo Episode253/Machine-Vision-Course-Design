@@ -39,6 +39,11 @@ source config/load_visual_lab_config.sh
 - VISUAL_LAB_FRAME_IMAGE
 - VISUAL_LAB_YUNET_ONNX
 - VISUAL_LAB_YUNET_ENGINE
+- OPENCV_ROOT
+- OPENCV_INCLUDE_DIR
+- OPENCV_LIB_DIR
+- TENSORRT_INCLUDE_DIR
+- TENSORRT_LIB_DIR
 
 ## 3. 运行方式
 
@@ -57,3 +62,20 @@ export VISUAL_LAB_CAMERA_DEVICE=/dev/video2
 ```
 
 环境变量优先级高于 JSON 文件。
+
+## Jetson ARM64 配置
+
+OpenCV 的架构适配发生在 qmake/build 阶段，因此要在执行 qmake 或启动脚本前加载配置。
+Jetson 上可以将路径写入 JSON：
+
+```json
+{
+  "opencv_root": "/usr",
+  "opencv_include_dir": "/usr/include/aarch64-linux-gnu",
+  "opencv_lib_dir": "/usr/lib/aarch64-linux-gnu",
+  "tensorrt_include_dir": "/usr/include/aarch64-linux-gnu",
+  "tensorrt_lib_dir": "/usr/lib/aarch64-linux-gnu"
+}
+```
+
+如果 Jetson 的 OpenCV 通过 pkg-config 安装，OpenCV 三项可以留空，`common.pri` 会回退到系统 `opencv4` 配置；TensorRT 两项仍建议填写实际路径。
