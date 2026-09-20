@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/test-images">
+        <file alias="amslergrid-640x480.jpg">../text_image/amslergrid-640x480.jpg</file>
+    </qresource>
+</RCC>

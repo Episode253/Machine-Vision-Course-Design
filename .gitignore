@@ -1,0 +1,22 @@
+# ---- Qt / qmake 构建产物 ----
+build/
+build-*/
+.qmake.stash
+Makefile
+Makefile.*
+moc_*.cpp
+moc_*.h
+qrc_*.cpp
+ui_*.h
+
+# ---- 编译中间文件 ----
+*.o
+*.obj
+*.so.debug
+
+# ---- IDE / 编辑器本地配置 ----
+*.user
+*.user.*
+*.autosave
+
+# 注意：common/opencv/lib 下预置的 ARM Linux 预编译库需要随仓库分发，故不忽略 *.so

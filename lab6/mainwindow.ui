@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1120</width>
+    <height>720</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>注视点检测</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="mainLayout">
+    <item>
+     <widget class="QLabel" name="previewLabel">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+        <horstretch>1</horstretch>
+        <verstretch>1</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>640</width>
+        <height>480</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border: 1px solid black; background: #202020; color: #b0b0b0;</string>
+      </property>
+      <property name="text">
+       <string>摄像头画面（点击“开始校准”）</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="sideLayout">
+      <item>
+       <widget class="QGroupBox" name="calibrationGroup">
+        <property name="title">
+         <string>中心校准</string>
+        </property>
+        <layout class="QVBoxLayout" name="calibrationLayout">
+         <item>
+          <widget class="QPushButton" name="startCalibrationButton">
+           <property name="text">
+            <string>开始校准</string>
+           </property>
+           <property name="toolTip">
+            <string>打开摄像头，实时预览眼睛画面</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="confirmCentreButton">
+           <property name="text">
+            <string>确认中心</string>
+           </property>
+           <property name="toolTip">
+            <string>锁定当前瞳孔位置为校准中心，并继续实时显示偏差</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="stopPreviewButton">
+           <property name="text">
+            <string>停止预览</string>
+           </property>
+           <property name="toolTip">
+            <string>停止摄像头预览</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="centreValueLabel">
+           <property name="text">
+            <string>校准中心：--</string>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="measureGroup">
+        <property name="title">
+         <string>实际测量</string>
+        </property>
+        <layout class="QVBoxLayout" name="measureLayout">
+         <item>
+          <widget class="QPushButton" name="measureButton">
+           <property name="text">
+            <string>实际测量</string>
+           </property>
+           <property name="toolTip">
+            <string>采一帧瞳孔位置，与校准中心比较</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="actualValueLabel">
+           <property name="text">
+            <string>当前瞳孔：--</string>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="verdictLabel">
+           <property name="text">
+            <string>等待校准</string>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>44</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="binaryGroup">
+        <property name="title">
+         <string>瞳孔二值化（实时）</string>
+        </property>
+        <layout class="QVBoxLayout" name="binaryLayout">
+         <item>
+          <widget class="QLabel" name="binaryLabel">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+             <horstretch>1</horstretch>
+             <verstretch>1</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>240</width>
+             <height>160</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border: 1px solid black; background: #101010; color: #b0b0b0;</string>
+           </property>
+           <property name="text">
+            <string>二值化 ROI</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="roiGroup">
+        <property name="title">
+         <string>眼 ROI / 阈值</string>
+        </property>
+        <layout class="QGridLayout" name="roiLayout">
+         <item row="0" column="0">
+          <widget class="QLabel" name="roiX1Label">
+           <property name="text">
+            <string>X1</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QSlider" name="roiX1Slider">
+           <property name="maximum">
+            <number>1280</number>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QLabel" name="roiX1Value">
+           <property name="text">
+            <string>0</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="roiY1Label">
+           <property name="text">
+            <string>Y1</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QSlider" name="roiY1Slider">
+           <property name="maximum">
+            <number>960</number>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="2">
+          <widget class="QLabel" name="roiY1Value">
+           <property name="text">
+            <string>0</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="roiX2Label">
+           <property name="text">
+            <string>X2</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QSlider" name="roiX2Slider">
+           <property name="maximum">
+            <number>1280</number>
+           </property>
+           <property name="value">
+            <number>50</number>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="2">
+          <widget class="QLabel" name="roiX2Value">
+           <property name="text">
+            <string>50</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="roiY2Label">
+           <property name="text">
+            <string>Y2</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QSlider" name="roiY2Slider">
+           <property name="maximum">
+            <number>960</number>
+           </property>
+           <property name="value">
+            <number>50</number>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="2">
+          <widget class="QLabel" name="roiY2Value">
+           <property name="text">
+            <string>50</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="thresholdLabel">
+           <property name="text">
+            <string>阈值</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="1">
+          <widget class="QSlider" name="thresholdSlider">
+           <property name="maximum">
+            <number>255</number>
+           </property>
+           <property name="value">
+            <number>55</number>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="2">
+          <widget class="QLabel" name="thresholdValue">
+           <property name="text">
+            <string>55</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
