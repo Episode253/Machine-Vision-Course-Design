@@ -140,8 +140,10 @@ bool PipelineViewModel::startInternal(const QString &imagePath)
     m_pipeline->setSource(m_source.get());
     // Sobel 关闭时直接显示原始彩色帧（与手册实验二的默认效果一致）；
     // 只有开启 Sobel 时才先转灰度、再求边缘。
-    // TODO(lab2): 勾选 Sobel 时，按顺序装配“灰度 + 边缘”两个 stage。
-    // TODO(lab2): 注意顺序不能反（否则管线格式链校验失败）。
+    if (m_sobelEnabled) {
+        m_pipeline->addStage(m_registry.create("gray"));
+        m_pipeline->addStage(m_registry.create("sobel"));
+    }
     m_pipeline->setOutput([this](labcore::FramePtr frame) {
 
         m_latest.set(labqt::toQImage(frame->mat));

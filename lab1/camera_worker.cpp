@@ -24,17 +24,23 @@ bool CameraWorker::start(FrameCallback onFrame)
         m_error = "no frame callback configured";
         return false;
     }
-    if (!m_source.open()) {
-        std::lock_guard<std::mutex> lock(m_errorMutex);
-        m_error = m_source.lastError().toStdString();
-        return false;
-    }
-
     m_onFrame = std::move(onFrame);
     m_stopRequested.store(false);
     m_running.store(true);
-    m_worker.start([this] { run(); });
-    qCInfo(labCamera) << "preview started on" << m_source.description();
+    m_worker.start([this] {
+        if (!m_source.open()) {
+            {
+                std::lock_guard<std::mutex> lock(m_errorMutex);
+                m_error = m_source.lastError().toStdString();
+            }
+            m_running.store(false);
+            m_onFrame(nullptr);
+            return;
+        }
+
+        qCInfo(labCamera) << "preview started on" << m_source.description();
+        run();
+    });
     return true;
 }
 
@@ -80,8 +86,8 @@ void CameraWorker::run()
             break;
         }
 
-        // TODO(lab1): 把这一帧水平镜像（前置摄像头预览习惯）。
-        // TODO(lab1): 打包成 Frame 并通过 m_onFrame 发布给界面。
+        cv::flip(frame->mat, frame->mat, 1);
+        m_onFrame(std::make_shared<const labcore::Frame>(std::move(*frame)));
 
         const auto elapsed = std::chrono::steady_clock::now() - begin;
         const auto remaining = std::chrono::duration_cast<std::chrono::milliseconds>(

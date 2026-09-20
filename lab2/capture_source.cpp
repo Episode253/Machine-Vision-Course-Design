@@ -38,8 +38,15 @@ void CaptureSource::close()
 
 labcore::FramePtr CaptureSource::next()
 {
-    // TODO(lab2): 已请求停止或源取不到帧时返回空。
-    // TODO(lab2): 测试图片模式下稍作等待以模拟帧率。
-    // TODO(lab2): 把取到的帧打包成共享帧返回。
-    return nullptr;
+    if (m_stopped.load())
+        return nullptr;
+
+    const std::optional<labcore::Frame> frame = m_source.next();
+    if (!frame || frame->mat.empty())
+        return nullptr;
+
+    if (!m_imagePath.isEmpty())
+        std::this_thread::sleep_for(std::chrono::milliseconds(33));
+
+    return std::make_shared<const labcore::Frame>(std::move(*frame));
 }

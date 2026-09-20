@@ -4,6 +4,7 @@
 #include <thread>
 #include <utility>
 
+#include <QtGlobal>
 #include <opencv2/imgproc.hpp>
 
 #include "qt/logging.h"
@@ -114,9 +115,24 @@ void MeasurementWorker::runPreview()
 
 std::optional<EyeDetectionResult> MeasurementWorker::measureOnce(std::chrono::milliseconds timeout)
 {
-    // TODO(lab6): 在超时内反复取帧，丢弃首帧以稳定曝光。
-    // TODO(lab6): 对后续帧做检测，识别成功即返回结果。
-    // TODO(lab6): 超时或中途收到停止请求则返回空。
-    (void)timeout;
+    if (!isOpen() || timeout.count() <= 0)
+        return std::nullopt;
+
+    const auto deadline = std::chrono::steady_clock::now() + timeout;
+    bool discardedFirstFrame = false;
+    while (!m_stopRequested.load() && std::chrono::steady_clock::now() < deadline) {
+        const std::optional<labcore::Frame> frame = m_source.next();
+        if (!frame)
+            return std::nullopt;
+        if (!discardedFirstFrame) {
+            discardedFirstFrame = true;
+            continue;
+        }
+
+        const EyeDetectionResult detection = detect(
+            std::make_shared<const labcore::Frame>(std::move(*frame)));
+        if (detection.found)
+            return detection;
+    }
     return std::nullopt;
 }

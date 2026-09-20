@@ -12,10 +12,19 @@ SobelStage::SobelStage()
 
 labcore::FramePtr SobelStage::process(const labcore::FramePtr &input)
 {
-    // TODO(lab2): 校验输入帧有效，无效则返回空。
-    // TODO(lab2): 按当前参数做 Sobel 边缘检测，返回处理后的新帧。
-    (void)input;
-    return nullptr;
+    if (!input || input->mat.empty())
+        return nullptr;
+
+    std::shared_ptr<const SobelParams> params;
+    {
+        std::lock_guard<std::mutex> lock(m_paramsMutex);
+        params = m_params;
+    }
+
+    cv::Mat edges;
+    cv::Sobel(input->mat, edges, CV_16S, params->dx, params->dy, params->ksize);
+    cv::convertScaleAbs(edges, edges);
+    return std::make_shared<const labcore::Frame>(labcore::makeFrame(std::move(edges), input->seq));
 }
 
 void SobelStage::setParams(std::shared_ptr<const labcore::StageParams> params)

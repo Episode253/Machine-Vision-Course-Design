@@ -1,0 +1,10 @@
+{
+  "camera_index": 0,
+  "camera_device": "",
+  "camera_backend": "v4l2",
+  "frame_width": 640,
+  "frame_height": 480,
+  "frame_image": "",
+  "yunet_onnx": "",
+  "yunet_engine": ""
+}

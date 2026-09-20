@@ -29,18 +29,34 @@ AmslerTest::AmslerTest(GridConfig config, std::uint64_t seed)
 
 void AmslerTest::start()
 {
-    // TODO(lab5): 生成区域访问顺序并随机打乱。
-    // TODO(lab5): 复位各区域的变形标记与游标计数。
-    // TODO(lab5): 进入“显示刺激”阶段。
-    m_phase = Phase::Idle;
+    const int roiCount = m_config.rows * m_config.cols;
+    m_order.resize(static_cast<std::size_t>(roiCount));
+    std::iota(m_order.begin(), m_order.end(), 0);
+    std::shuffle(m_order.begin(), m_order.end(), m_rng);
+    for (int index = 0; index < roiCount; ++index)
+        m_rois[static_cast<std::size_t>(index)].distorted = false;
+    m_cursor = 0;
+    m_lineIndex = 0;
+    m_sampled = 0;
+    m_phase = m_order.empty() ? Phase::Finished : Phase::ShowingStimulus;
 }
 
 void AmslerTest::answer(Answer answer)
 {
-    // TODO(lab5): 未在测试中就忽略本次回答。
-    // TODO(lab5): 答“弯曲”直接标记当前区域并前进到下一区域。
-    // TODO(lab5): 答“正常”需累计够线型数才前进，否则继续下一种线型。
-    (void)answer;
+    if (m_phase != Phase::WaitingAnswer || m_order.empty())
+        return;
+
+    if (answer == Answer::Distorted) {
+        currentRoi().distorted = true;
+        advanceRoi();
+        return;
+    }
+
+    ++m_lineIndex;
+    if (m_lineIndex >= m_config.samplesPerRoi)
+        advanceRoi();
+    else
+        m_phase = Phase::ShowingStimulus;
 }
 
 void AmslerTest::stimulusTimeout()
