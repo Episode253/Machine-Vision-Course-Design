@@ -9,10 +9,25 @@ moc_*.h
 qrc_*.cpp
 ui_*.h
 
+# ---- 实验工程生成的执行文件和编译产物 ----
+lab*/lab[0-9]
+lab*/Makefile
+lab*/.qmake.stash
+lab*/moc_*.cpp
+lab*/moc_*.h
+lab*/*.o
+lab*/*.obj
+lab*/*.so
+lab*/*.so.*
+
 # ---- 编译中间文件 ----
 *.o
 *.obj
 *.so.debug
+
+# ---- 文档和非源码附属文件 ----
+*.docx
+*.pdf
 
 # ---- IDE / 编辑器本地配置 ----
 *.user
