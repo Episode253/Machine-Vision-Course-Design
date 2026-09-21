@@ -9,7 +9,8 @@ SOURCES += \
     $$COMMON_QT_SOURCES \
     detector_worker.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    $$PWD/../yunet_trt_cpp/src/yunet_trt.cpp      # ← 新增
 
 HEADERS += \
     $$COMMON_RUNTIME_HEADERS \
@@ -18,4 +19,13 @@ HEADERS += \
     mainwindow.h
 
 INCLUDEPATH += $$COMMON_INCLUDEPATH \
-    $$PWD/../yunet_trt_cpp/include
+    $$PWD/../yunet_trt_cpp/include \
+    /usr/include/aarch64-linux-gnu \              # ← TensorRT 头文件（NvInfer.h）
+    /usr/local/cuda/include                       # ← CUDA 头文件
+
+LIBS += \
+    -L/usr/lib/aarch64-linux-gnu \
+    -L/usr/local/cuda/lib64 \
+    -lnvinfer \
+    -lnvonnxparser \
+    -lcudart

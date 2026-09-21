@@ -2,10 +2,10 @@
 
 #include <algorithm>
 #include <chrono>
-#include <filesystem>
 #include <thread>
 
 #include <QCoreApplication>
+#include <QFileInfo>          // ← 加这个
 #include <QTimer>
 #include <opencv2/imgproc.hpp>
 
@@ -20,7 +20,7 @@ QString findPath(const QString &relativePath)
         QCoreApplication::applicationDirPath() + "/../" + relativePath,
         QCoreApplication::applicationDirPath() + "/../../" + relativePath};
     for (const QString &candidate : candidates)
-        if (std::filesystem::is_regular_file(candidate.toStdString()))
+        if (QFileInfo(candidate).isFile())   // ← 用 QFileInfo 判断
             return candidate;
     return QString();
 }

@@ -2,7 +2,7 @@
 
 #include <algorithm>
 #include <chrono>
-#include <filesystem>
+#include <QFileInfo>
 #include <thread>
 
 #include <QCoreApplication>
@@ -20,7 +20,7 @@ QString findModel(const QString &relative)
         QCoreApplication::applicationDirPath() + "/../" + relative,
         QCoreApplication::applicationDirPath() + "/../../" + relative};
     for (const QString &candidate : candidates)
-        if (std::filesystem::is_regular_file(candidate.toStdString()))
+        if (QFileInfo(candidate).isFile())
             return candidate;
     return {};
 }

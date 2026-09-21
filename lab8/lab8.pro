@@ -24,7 +24,9 @@ HEADERS += \
     mainwindow.h
 
 INCLUDEPATH += $$COMMON_INCLUDEPATH \
-    $$PWD/../yunet_trt_cpp/include
+    $$PWD/../yunet_trt_cpp/include \
+    /usr/include/aarch64-linux-gnu \
+    /usr/local/cuda/include     
 
 TENSORRT_INCLUDE_DIR = $$(TENSORRT_INCLUDE_DIR)
 isEmpty(TENSORRT_INCLUDE_DIR):exists(/usr/include/aarch64-linux-gnu/NvInfer.h) {
@@ -37,4 +39,9 @@ isEmpty(TENSORRT_LIB_DIR):exists(/usr/lib/aarch64-linux-gnu/libnvinfer.so) {
     TENSORRT_LIB_DIR = /usr/lib/aarch64-linux-gnu
 }
 !isEmpty(TENSORRT_LIB_DIR): LIBS += -L$$TENSORRT_LIB_DIR
-LIBS += -lnvinfer -lnvonnxparser -lcudart
+LIBS += \
+    -L/usr/lib/aarch64-linux-gnu \
+    -L/usr/local/cuda/lib64 \
+    -lnvinfer \
+    -lnvonnxparser \
+    -lcudart
