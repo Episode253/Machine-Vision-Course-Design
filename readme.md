@@ -176,3 +176,25 @@ lab1 / lab5 / lab6 同理，把路径与工程名换成对应的即可。
 - 后处理：置信度阈值、`iou` + `nms` 去重
 - 业务映射：人脸框 → 眼 ROI（`computeEyeRois`）、逐帧跟踪
 - 输出回读：D2H、类型/维度解析（`getBinding*`）
+
+
+
+#### 编译
+
+```
+cd ~/Desktop/Machine-Vision-Course-Design
+QMAKE=/usr/lib/qt5/bin/qmake
+source config/load_visual_lab_config.sh
+
+for l in lab1 lab2 lab3 lab4 lab5 lab6 lab7 lab8; do
+  grep -q '^[[:space:]]*DESTDIR' "$l/$l.pro" \
+    || printf '\nDESTDIR = build\n' >> "$l/$l.pro"
+  [ -L "$l/$l" ] || { rm -f "$l/$l"; ln -s "build/$l" "$l/$l"; }
+  mkdir -p "$l/build"
+  echo "=== $l ==="
+  (cd "$l" && make distclean >/dev/null 2>&1; \
+   rm -f .qmake.stash Makefile; \
+   "$QMAKE" "$l.pro" && make -j"$(nproc)") \
+   || echo ">>> $l 编译失败"
+done
+```
