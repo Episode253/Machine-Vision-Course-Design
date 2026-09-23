@@ -11,6 +11,8 @@
 
 
 
+// lab2 的管线源阶段：把内部 FrameSource 适配成 labcore::Source 接口。
+// 摄像头与图片二选一由构造时路径是否为空决定，outputFormat 恒为 BGR8。
 class CaptureSource : public labcore::Source {
 public:
     CaptureSource() = default;
@@ -24,7 +26,8 @@ public:
 
 
 
-
+    // 阶段接口的取帧函数；返回空表示源结束或出错，管线据此终止采集循环。
+    // 由管线的工作线程调用，close 可能在另一线程并发置位 m_stopped。
     labcore::FramePtr next() override;
 
 private:
